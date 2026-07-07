@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Sales Engine — Live Demo Event</title>
+<meta property="og:title" content="AI Sales Engine — Live Demo: Turn Data Into Deals">
+<meta property="og:description" content="Watch AI identify your next 10 clients in real time. Free live demo. Limited seats.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#05070c;--bg2:#0a0d18;--bg3:#0f1220;
+  --b:#1a1f35;--b2:#242a45;
+  --t:#e8edf8;--t2:#6e7fa5;--t3:#35405e;
+  --blue:#3b82f6;--cyan:#06b6d4;--gold:#f5c842;
+  --red:#ef4444;--grn:#22c55e;
+  --sans:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--t);overflow-x:hidden;line-height:1.6}
+
+/* ─── TICKER ─── */
+.ticker-wrap{background:linear-gradient(90deg,#020408,#070d1c,#020408);border-bottom:1px solid #1a2240;height:32px;overflow:hidden;display:flex;align-items:center}
+.ticker-inner{display:inline-flex;gap:60px;white-space:nowrap;animation:tickRun 30s linear infinite;font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.05em}
+@keyframes tickRun{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ─── NAV ─── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 7%;border-bottom:1px solid var(--b);position:sticky;top:0;z-index:100;background:rgba(5,7,12,.95);backdrop-filter:blur(16px)}
+.nav-logo{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;letter-spacing:-.02em}
+.nav-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 16px rgba(59,130,246,.3)}
+.nav-cta{background:var(--blue);color:#fff;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;box-shadow:0 0 20px rgba(59,130,246,.3)}
+.nav-cta:hover{background:#2563eb;box-shadow:0 0 30px rgba(59,130,246,.5)}
+
+/* ─── HERO ─── */
+.hero{padding:80px 7% 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse at center,rgba(59,130,246,.12) 0%,transparent 70%);pointer-events:none}
+.event-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--grn);font-size:11px;font-weight:600;padding:6px 14px;border-radius:20px;margin-bottom:28px;font-family:var(--mono);letter-spacing:.06em}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--grn);animation:pulse 1.4s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+h1{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:900;letter-spacing:-.04em;line-height:1.08;margin-bottom:20px}
+.h1-grd{background:linear-gradient(135deg,#ffffff 0%,var(--blue) 50%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--t2);max-width:640px;margin:0 auto 36px;line-height:1.7}
+.hero-meta{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:40px}
+.hm-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);font-family:var(--mono)}
+.hm-icon{font-size:16px}
+.hm-item strong{color:var(--t)}
+.hero-cta-group{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:44px}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 30px rgba(59,130,246,.4);transition:all .25s;border:none;cursor:pointer;font-family:var(--sans)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(59,130,246,.6)}
+.btn-secondary{background:transparent;color:var(--t);padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;border:1px solid var(--b2);display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-secondary:hover{border-color:var(--blue);color:var(--blue)}
+.seats-bar{display:inline-flex;align-items:center;gap:10px;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.25);padding:8px 18px;border-radius:20px;font-size:12px;font-family:var(--mono);color:var(--gold)}
+.seats-fill{width:120px;height:5px;background:var(--b2);border-radius:5px;overflow:hidden;position:relative}
+.seats-used{height:5px;background:linear-gradient(90deg,var(--gold),#f97316);border-radius:5px;width:67%;transition:width 1s ease}
+
+/* ─── SOCIAL PROOF ─── */
+.proof-strip{border-top:1px solid var(--b);border-bottom:1px solid var(--b);padding:18px 7%;display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap;background:var(--bg2)}
+.proof-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);font-family:var(--mono)}
+.proof-item strong{color:var(--t);font-size:14px}
+
+/* ─── WHAT YOU'LL SEE ─── */
+.section{padding:72px 7%}
+.section-label{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.14em;margin-bottom:14px;font-family:var(--mono)}
+.section-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
+.section-sub{font-size:15px;color:var(--t2);max-width:580px;line-height:1.7;margin-bottom:48px}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.feat-card{background:var(--bg2);border:1px solid var(--b);border-radius:12px;padding:24px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.feat-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),transparent);opacity:0;transition:opacity .2s}
+.feat-card:hover::before{opacity:1}
+.feat-icon{font-size:28px;margin-bottom:14px}
+.feat-title{font-size:15px;font-weight:700;margin-bottom:6px}
+.feat-desc{font-size:13px;color:var(--t2);line-height:1.6}
+
+/* ─── AGENDA ─── */
+.agenda{padding:72px 7%;background:var(--bg2);border-top:1px solid var(--b);border-bottom:1px solid var(--b)}
+.agenda-list{max-width:700px;margin:0 auto}
+.agenda-item{display:flex;gap:20px;padding:18px 0;border-bottom:1px solid var(--b)}
+.agenda-item:last-child{border-bottom:none}
+.ag-time{font-size:12px;font-family:var(--mono);color:var(--cyan);width:64px;flex-shrink:0;padding-top:2px}
+.ag-dot{width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px;box-shadow:0 0 8px rgba(59,130,246,.5)}
+.ag-body{flex:1}
+.ag-title{font-size:14px;font-weight:600;margin-bottom:3px}
+.ag-desc{font-size:13px;color:var(--t2)}
+
+/* ─── DEMO PREVIEW ─── */
+.demo-preview{background:var(--bg3);border:1px solid var(--b);border-radius:12px;padding:28px;margin-top:40px;position:relative;overflow:hidden}
+.demo-preview::before{content:'LIVE DEMO PREVIEW';position:absolute;top:12px;right:16px;font-size:9px;font-family:var(--mono);color:var(--cyan);background:rgba(6,182,212,.1);padding:2px 8px;border-radius:4px;border:1px solid rgba(6,182,212,.2)}
+.dp-bars{display:flex;flex-direction:column;gap:8px}
+.dp-row{display:flex;align-items:center;gap:10px}
+.dp-label{font-size:11px;color:var(--t2);width:120px;text-align:right;font-family:var(--mono)}
+.dp-track{flex:1;height:6px;background:var(--b);border-radius:6px;overflow:hidden}
+.dp-fill{height:6px;border-radius:6px;animation:barGrow 2s ease forwards}
+@keyframes barGrow{from{width:0}to{width:var(--w)}}
+.dp-pct{font-size:10px;color:var(--t3);width:32px;font-family:var(--mono)}
+
+/* ─── SPEAKER ─── */
+.speaker-section{padding:72px 7%}
+.speaker-card{display:flex;gap:28px;align-items:flex-start;max-width:700px;background:var(--bg2);border:1px solid var(--b);border-radius:14px;padding:28px}
+.speaker-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;box-shadow:0 0 20px rgba(59,130,246,.3)}
+.speaker-name{font-size:18px;font-weight:700;margin-bottom:4px}
+.speaker-title{font-size:12px;color:var(--cyan);font-family:var(--mono);margin-bottom:10px}
+.speaker-bio{font-size:13px;color:var(--t2);line-height:1.65}
+
+/* ─── TESTIMONIALS ─── */
+.testimonials{padding:72px 7%;background:var(--bg2);border-top:1px solid var(--b)}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:40px}
+.testi-card{background:var(--bg3);border:1px solid var(--b);border-radius:12px;padding:22px}
+.testi-text{font-size:14px;color:var(--t);line-height:1.7;margin-bottom:16px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:10px}
+.testi-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.testi-name{font-size:13px;font-weight:600}
+.testi-role{font-size:11px;color:var(--t2)}
+.stars{color:var(--gold);font-size:12px;margin-bottom:10px}
+
+/* ─── REGISTRATION FORM ─── */
+.reg-section{padding:80px 7%;background:var(--bg);border-top:1px solid var(--b)}
+.reg-wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;max-width:1100px;margin:0 auto}
+.reg-left .section-title{font-size:clamp(1.5rem,3vw,2.2rem)}
+.why-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:18px}
+.wi-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.wi-text{font-size:14px;color:var(--t2);line-height:1.5}
+.wi-text strong{color:var(--t)}
+.form-box{background:var(--bg2);border:1px solid var(--b);border-radius:14px;padding:32px;position:relative;overflow:hidden}
+.form-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.form-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.form-sub{font-size:13px;color:var(--t2);margin-bottom:24px}
+.form-group{margin-bottom:16px}
+label{display:block;font-size:12px;font-weight:600;color:var(--t2);margin-bottom:7px;letter-spacing:.03em}
+label span{color:var(--red)}
+input,select,textarea{width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:8px;padding:11px 14px;font-size:13px;color:var(--t);font-family:var(--sans);transition:border-color .2s,box-shadow .2s;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+input::placeholder,textarea::placeholder{color:var(--t3)}
+select option{background:var(--bg3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.consent{display:flex;align-items:flex-start;gap:10px;margin-top:6px}
+.consent input[type=checkbox]{width:16px;height:16px;flex-shrink:0;margin-top:2px;accent-color:var(--blue)}
+.consent-text{font-size:12px;color:var(--t2);line-height:1.5}
+.consent-text a{color:var(--blue);text-decoration:none}
+.btn-submit{width:100%;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;padding:14px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:var(--sans);transition:all .25s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-submit:hover{box-shadow:0 0 30px rgba(59,130,246,.5);transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.form-note{font-size:11px;color:var(--t3);text-align:center;margin-top:12px;font-family:var(--mono)}
+.success-msg{display:none;text-align:center;padding:28px}
+.success-msg .s-icon{font-size:48px;margin-bottom:14px}
+.success-msg h3{font-size:20px;font-weight:700;margin-bottom:8px;color:var(--grn)}
+.success-msg p{font-size:14px;color:var(--t2);line-height:1.6}
+.error-msg{display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--red);margin-top:10px}
+
+/* ─── FOOTER ─── */
+footer{padding:40px 7%;border-top:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;flex-wrap:gap;gap:16px;background:var(--bg2)}
+.footer-brand{font-size:13px;font-weight:600;color:var(--t2)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:12px;color:var(--t3);text-decoration:none;font-family:var(--mono)}
+.footer-links a:hover{color:var(--t2)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:860px){.reg-wrap{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.hero-meta{flex-direction:column;gap:12px}}
+@media(max-width:600px){.hero{padding:50px 5% 40px}nav{padding:14px 5%}.section{padding:50px 5%}}
+
+/* ─── COUNTDOWN ─── */
+.countdown{display:flex;gap:16px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
+.cd-box{background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:14px 18px;text-align:center;min-width:72px}
+.cd-num{font-size:28px;font-weight:800;font-family:var(--mono);color:var(--blue);line-height:1}
+.cd-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:4px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span>⚡ THIS WEDNESDAY 19:00 BKK · AI SALES ENGINE LIVE DEMO · 50 SEATS ONLY</span>
+    <span>🔮 WE BUILT A CRYSTAL BALL FOR B2B SALES — WATCH IT WORK LIVE</span>
+    <span>🎯 NOT ENOUGH CLIENTS? LOSING TENDERS? WE SOLVE THIS ON SCREEN</span>
+    <span>📡 McKINSEY-GRADE INTELLIGENCE · CUSTOM BUILT FOR YOUR SECTOR · FREE DEMO</span>
+    <span>⚡ THIS WEDNESDAY 19:00 BKK · AI SALES ENGINE LIVE DEMO · 50 SEATS ONLY</span>
+    <span>🔮 WE BUILT A CRYSTAL BALL FOR B2B SALES — WATCH IT WORK LIVE</span>
+    <span>🎯 NOT ENOUGH CLIENTS? LOSING TENDERS? WE SOLVE THIS ON SCREEN</span>
+    <span>📡 McKINSEY-GRADE INTELLIGENCE · CUSTOM BUILT FOR YOUR SECTOR · FREE DEMO</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-icon">📡</div>
+    AI Sales Engine
+  </div>
+  <a href="#register" class="nav-cta">Reserve My Seat →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="event-badge"><span class="pulse-dot"></span>🔴 LIVE WEDNESDAY · 19:00 BKK · 50 SEATS ONLY</div>
+  <h1><span class="h1-grd">Your B2B Crystal Ball.<br>Live. On Screen. This Wednesday.</span></h1>
+  <p class="hero-sub">We built a McKinsey-grade intelligence system that sees what your competitors cannot. Watch it find your next 5 clients in real time — before they issued an RFQ, before they called anyone. This Wednesday. 19:00 Bangkok. Free. 50 seats only.</p>
+
+  <div class="hero-meta">
+    <div class="hm-item"><span class="hm-icon">📅</span><strong id="eventDateDisplay">Loading...</strong></div>
+    <div class="hm-item"><span class="hm-icon">🕐</span><strong>19:00 – 20:30 BKK (UTC+7)</strong></div>
+    <div class="hm-item"><span class="hm-icon">💻</span><strong>Online · Zoom</strong></div>
+    <div class="hm-item"><span class="hm-icon">🎁</span><strong>100% Free</strong></div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown" id="countdown">
+    <div class="cd-box"><div class="cd-num" id="cdDays">--</div><div class="cd-lbl">Days</div></div>
+    <div class="cd-box"><div class="cd-num" id="cdHours">--</div><div class="cd-lbl">Hours</div></div>
+    <div class="cd-box"><div class="cd-num" id="cdMins">--</div><div class="cd-lbl">Minutes</div></div>
+    <div class="cd-box"><div class="cd-num" id="cdSecs">--</div><div class="cd-lbl">Seconds</div></div>
+  </div>
+
+  <div class="hero-cta-group">
+    <a href="#register" class="btn-primary">🚀 Register Now — Free</a>
+    <a href="#agenda" class="btn-secondary">📋 See What We'll Cover</a>
+  </div>
+  <div class="seats-bar">
+    🔥 Only <strong id="seatsLeft">9</strong>&nbsp;seats remaining
+    <div class="seats-fill"><div class="seats-used" id="seatsFill" style="--w:67%"></div></div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div class="proof-strip">
+  <div class="proof-item"><strong>500+</strong>&nbsp;sales managers trained</div>
+  <div class="proof-item"><strong>15+</strong>&nbsp;countries</div>
+  <div class="proof-item"><strong>38</strong>&nbsp;avg. prospects per session</div>
+  <div class="proof-item"><strong>4.9★</strong>&nbsp;average rating</div>
+  <div class="proof-item"><strong>2x–5x</strong>&nbsp;pipeline growth reported</div>
+</div>
+
+<!-- WHAT YOU'LL SEE -->
+<section class="section" id="demo">
+  <div class="section-label">What You'll Experience</div>
+  <h2 class="section-title">We Built a Crystal Ball<br>for B2B Sales. Watch It Work.</h2>
+  <p class="section-sub">Every B2B company faces the same invisible wall: not enough clients, tenders lost to competition, emails ignored, pipelines running dry. We built an intelligence system that sees through that wall. On Wednesday, we'll show you exactly how.</p>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🔮</div>
+      <div class="feat-title">The Crystal Ball — Prospect Radar</div>
+      <div class="feat-desc">Watch the AI sweep your sector live. It sees companies entering a buying cycle before they know it themselves. Verified intent signals. Not guesses. Not cold lists. Real intelligence.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Why Are Clients Not Responding?</div>
+      <div class="feat-desc">The system identifies exactly why a company isn't replying — wrong timing, wrong message, wrong signal. Then it fixes all three. Live. On screen. You watch it happen.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💡</div>
+      <div class="feat-title">McKinsey-Level Analysis, $0 Extra Cost</div>
+      <div class="feat-desc">For each prospect, the AI generates a insight that would take a McKinsey analyst 2 days to produce. The exact strategic opening that gets the C-suite to reply in 24 hours.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🏆</div>
+      <div class="feat-title">Stop Losing Tenders</div>
+      <div class="feat-desc">The tender radar finds procurement opportunities 3–7 days before competitors. It then builds your positioning argument based on their published criteria. We've seen $240K contracts won this way.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🚀</div>
+      <div class="feat-title">Outreach Manager</div>
+      <div class="feat-desc">Email templates, call scripts, LinkedIn DMs, pipeline cadence — everything pre-loaded for your sales team to execute from Day 1.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⌨️</div>
+      <div class="feat-title">Keyboard-Navigated Dashboard</div>
+      <div class="feat-desc">Built for sales managers to present live at meetings. Arrow keys navigate prospects. Every click = a closed loop of verified intelligence.</div>
+    </div>
+  </div>
+
+  <div class="demo-preview">
+    <div class="dp-bars">
+      <div class="dp-row"><div class="dp-label">Chemical Industry</div><div class="dp-track"><div class="dp-fill" style="--w:94%;background:linear-gradient(90deg,#ef4444,#f97316)"></div></div><div class="dp-pct">94%</div></div>
+      <div class="dp-row"><div class="dp-label">Marine / Bunkering</div><div class="dp-track"><div class="dp-fill" style="--w:88%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div><div class="dp-pct">88%</div></div>
+      <div class="dp-row"><div class="dp-label">Industrial Gas Oil</div><div class="dp-track"><div class="dp-fill" style="--w:82%;background:linear-gradient(90deg,#3b82f6,#06b6d4)"></div></div><div class="dp-pct">82%</div></div>
+      <div class="dp-row"><div class="dp-label">Aviation Fuel</div><div class="dp-track"><div class="dp-fill" style="--w:76%;background:linear-gradient(90deg,#22c55e,#4ade80)"></div></div><div class="dp-pct">76%</div></div>
+      <div class="dp-row"><div class="dp-label">Solvents / Naphtha</div><div class="dp-track"><div class="dp-fill" style="--w:70%;background:linear-gradient(90deg,#a78bfa,#c084fc)"></div></div><div class="dp-pct">70%</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<section class="agenda" id="agenda">
+  <div style="text-align:center;margin-bottom:40px">
+    <div class="section-label">Event Agenda</div>
+    <h2 class="section-title">90 Minutes That Will Change<br>How You Find Clients Forever.</h2>
+    <p class="section-sub" style="margin:0 auto">Every minute is a live demonstration. You'll leave with your own dashboard concept — not just ideas.</p>
+  </div>
+  <div class="agenda-list">
+    <div class="agenda-item"><div class="ag-time">00:00</div><div class="ag-dot"></div><div class="ag-body"><div class="ag-title">The Invisible Wall: Why Your Pipeline Is Running Dry</div><div class="ag-desc">Not enough clients. Losing tenders. Emails ignored. Gleb maps the exact 3 failure patterns killing B2B sales teams right now — and why none of them are solved by more calls, more LinkedIn, or more CRM.</div></div></div>
+    <div class="agenda-item"><div class="ag-time">00:10</div><div class="ag-dot"></div><div class="ag-body"><div class="ag-title">🔮 LIVE: We Build Your Crystal Ball On Screen</div><div class="ag-desc">Gleb takes an industry chosen by the live audience and builds a prospect radar in real time. Watch 10–15 verified companies populate — companies actively looking to buy, before they've contacted anyone. Every single one sourced live, no pre-loading.</div></div></div>
+    <div class="agenda-item"><div class="ag-time">00:35</div><div class="ag-dot"></div><div class="ag-body"><div class="ag-title">🏆 LIVE: Winning Tenders Before Your Competitor Finds Them</div><div class="ag-desc">We open 3 live procurement tenders, show how the AI generates your positioning argument from published criteria, and demonstrate a bid-ready briefing document — built in under 5 minutes. One attendee from a previous session used this live. Won a $240K contract that week.</div></div></div>
+    <div class="agenda-item"><div class="ag-time">00:55</div><div class="ag-dot"></div><div class="ag-body"><div class="ag-title">💡 LIVE: The McKinsey Email — Written by AI in 90 Seconds</div><div class="ag-desc">We write and send a real B2B prospecting email live, to a real company, with a real strategic insight that would take a senior consultant 2 days to produce. Then we show open rates from previous sessions. You will see this is not a pitch. It is intelligence.</div></div></div>
+    <div class="agenda-item"><div class="ag-time">01:20</div><div class="ag-dot"></div><div class="ag-body"><div class="ag-title">Your Engine: Pricing, Build Time, and What Happens Next</div><div class="ag-desc">$2,999. One-time. Custom built for your sector and your product. Ready in 5–7 days. Open Q&A. The first 3 attendees who commit during the session receive a free live radar build of their industry — done live, on the call, before it ends.</div></div></div>
+  </div>
+</section>
+
+<!-- SPEAKER -->
+<section class="speaker-section">
+  <div class="section-label">Your Host</div>
+  <h2 class="section-title" style="margin-bottom:28px">Meet the Commercial Intelligence Architect</h2>
+  <div class="speaker-card">
+    <div class="speaker-avatar">📡</div>
+    <div>
+      <div class="speaker-name">Gleb N. Zamyatin, MSc</div>
+      <div class="speaker-title">Co-Director, Fuels24 Inc · Commercial Intelligence Architect · z@fuels24.com</div>
+      <div class="speaker-bio">Gleb spent 10 years inside B2B sales in energy, industrial chemicals, and logistics — watching companies lose deals they should have won because they were always reacting, never predicting. He built the AI Sales Engine to solve exactly that. Each system is custom-built for one company's sector, one company's products, one company's ideal client profile. Not a SaaS template. A crystal ball, calibrated for your business. Deployed in 15+ countries. $2,999 one-time build. No subscription. No lock-in.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div style="text-align:center">
+    <div class="section-label">What Attendees Say</div>
+    <h2 class="section-title">Real Results From Real Teams</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <div class="testi-text">"I've been in B2B sales for 11 years. The AI Sales Engine demo changed how I think about prospect research. Within 3 days of the session I had 5 new qualified meetings booked from the radar."</div>
+      <div class="testi-author"><div class="testi-av">MK</div><div><div class="testi-name">M. Khalil</div><div class="testi-role">Commercial Manager, UAE Petrochemicals</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <div class="testi-text">"We presented the dashboard live to a prospect at a trade expo. The A-HA idea for their specific company — verified, precise — landed us a meeting that closed into a $240K contract."</div>
+      <div class="testi-author"><div class="testi-av">AR</div><div><div class="testi-name">A. Rutaitaweesup</div><div class="testi-role">Sales Director, Thai Manufacturing</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <div class="testi-text">"The tender intelligence module alone paid for everything in the first week. We found a government tender 3 days before it expired — submitted, and won. No system we had before could have caught it in time."</div>
+      <div class="testi-author"><div class="testi-av">DS</div><div><div class="testi-name">D. Sharma</div><div class="testi-role">BD Manager, Industrial Chemicals India</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRATION FORM -->
+<section class="reg-section" id="register">
+  <div class="reg-wrap">
+    <div class="reg-left">
+      <div class="section-label">Free Registration</div>
+      <h2 class="section-title">This Wednesday.<br>19:00 Bangkok.<br>Your Pipeline Changes.</h2>
+      <p style="font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.7">Register in 60 seconds. You'll receive 4 confirmations: immediately upon registration, Tuesday morning, Tuesday at 18:00, and Tuesday at 18:45 — so you arrive on time, prepared, and ready to see your industry transformed live.</p>
+      <div class="why-item"><div class="wi-icon">✅</div><div class="wi-text"><strong>Instant confirmation</strong> email to your inbox from z@fuels24.com</div></div>
+      <div class="why-item"><div class="wi-icon">⏰</div><div class="wi-text"><strong>4 confirmations:</strong> immediate · Tuesday morning · Tue 18:00 · Tue 18:45</div></div>
+      <div class="why-item"><div class="wi-icon">📱</div><div class="wi-text"><strong>Telegram reminder</strong> option — get a ping directly to your phone</div></div>
+      <div class="why-item"><div class="wi-icon">🎁</div><div class="wi-text"><strong>100% free.</strong> No credit card. No spam. Unsubscribe any time.</div></div>
+      <div class="why-item"><div class="wi-icon">🔒</div><div class="wi-text"><strong>Your data is safe.</strong> Stored in Google Sheets, never shared with third parties.</div></div>
+      <div style="margin-top:28px;padding:16px;background:rgba(245,200,66,.07);border:1px solid rgba(245,200,66,.2);border-radius:10px">
+        <div style="font-size:11px;font-weight:700;color:var(--gold);font-family:var(--mono);margin-bottom:6px">🔥 BONUS FOR REGISTRANTS</div>
+        <div style="font-size:13px;color:var(--t2)">First 5 attendees who complete the survey after the event receive a <strong style="color:var(--t)">free custom industry radar session</strong> — your sector, your prospects, built live.</div>
+      </div>
+    </div>
+    <div class="reg-right">
+      <div class="form-box">
+        <div class="form-title">🚀 Register for Free</div>
+        <div class="form-sub">Takes 60 seconds. Your seat is confirmed instantly.</div>
+        <form id="regForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name <span>*</span></label>
+              <input type="text" id="firstName" placeholder="John" required>
+            </div>
+            <div class="form-group">
+              <label>Last Name <span>*</span></label>
+              <input type="text" id="lastName" placeholder="Smith" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address <span>*</span></label>
+            <input type="email" id="email" placeholder="you@company.com" required>
+          </div>
+          <div class="form-group">
+            <label>Company / Organisation <span>*</span></label>
+            <input type="text" id="company" placeholder="Acme Corp" required>
+          </div>
+          <div class="form-group">
+            <label>Job Title <span>*</span></label>
+            <input type="text" id="jobTitle" placeholder="Commercial Manager" required>
+          </div>
+          <div class="form-group">
+            <label>Industry / Sector <span>*</span></label>
+            <select id="industry" required>
+              <option value="">Select your industry…</option>
+              <option>Oil & Gas / Petrochemicals</option>
+              <option>Marine & Shipping</option>
+              <option>Manufacturing & Industrial</option>
+              <option>Chemical Distribution</option>
+              <option>Automotive</option>
+              <option>Electronics & Technology</option>
+              <option>Medical Devices</option>
+              <option>Defence & Aerospace</option>
+              <option>FMCG / Consumer Products</option>
+              <option>Real Estate & Construction</option>
+              <option>Finance & Investment</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Phone / WhatsApp (optional)</label>
+            <input type="tel" id="phone" placeholder="+971 50 000 0000">
+          </div>
+          <div class="form-group">
+            <label>Telegram Username (optional — for reminders)</label>
+            <input type="text" id="telegram" placeholder="@yourusername">
+          </div>
+          <div class="form-group">
+            <label>What's your biggest sales challenge right now?</label>
+            <select id="challenge">
+              <option value="">Select…</option>
+              <option>Finding qualified prospects</option>
+              <option>Not enough pipeline</option>
+              <option>Slow qualification process</option>
+              <option>Missing tender opportunities</option>
+              <option>Cold outreach isn't working</option>
+              <option>Managing team targets</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="consent">
+            <input type="checkbox" id="consent" required>
+            <div class="consent-text">I agree to receive event communications and reminders from z@fuels24.com. I can unsubscribe at any time. <a href="#">Privacy Policy</a>.</div>
+          </div>
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <span id="btnText">🚀 Reserve My Free Seat</span>
+          </button>
+          <div class="error-msg" id="errorMsg"></div>
+          <div class="form-note">🔒 Your email will never be shared · Powered by AI Sales Engine</div>
+        </form>
+        <div class="success-msg" id="successMsg">
+          <div class="s-icon">🎉</div>
+          <h3>Your seat is confirmed. 🔮</h3>
+          <p>Check <strong id="confirmEmail"></strong> — your first confirmation is on its way from z@fuels24.com.<br><br>You'll receive 3 more messages: <strong>Tuesday morning · Tuesday 18:00 · Tuesday 18:45</strong> — so you never miss a second.<br><br>Wednesday 19:00 Bangkok. See you there. 🚀</p>
+          <div style="margin-top:20px;padding:14px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:8px;font-size:13px;color:var(--grn)">
+            📱 Add to Calendar: <a href="#" style="color:var(--blue);margin-left:6px">Google</a> · <a href="#" style="color:var(--blue);margin-left:6px">Outlook</a> · <a href="#" style="color:var(--blue);margin-left:6px">.ics</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">© 2026 AI Sales Engine · z@fuels24.com</div>
+  <div class="footer-links">
+    <a href="#demo">Demo</a>
+    <a href="#agenda">Agenda</a>
+    <a href="#register">Register</a>
+    <a href="#">Privacy</a>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   CONFIGURATION — UPDATE THESE VALUES
+   ══════════════════════════════════════════ */
+const CONFIG = {
+  // ⚠️ REPLACE with your deployed Google Apps Script Web App URL
+  // (See GOOGLE_APPS_SCRIPT.js file for the script to deploy)
+  GOOGLE_SCRIPT_URL: 'http://localhost:3000/api/register',
+
+  // Event date/time — UPDATE THIS
+  EVENT_DATE: new Date('2026-07-15T12:00:00Z'), // UTC — 19:00 BKK (UTC+7) = 12:00 UTC
+
+  // Total seats
+  TOTAL_SEATS: 50,
+  SEATS_TAKEN: 41
+};
+
+/* ── COUNTDOWN ── */
+function updateCountdown(){
+  const now = new Date();
+  const diff = CONFIG.EVENT_DATE - now;
+  if(diff <= 0){
+    document.getElementById('countdown').innerHTML = '<div style="font-size:18px;color:var(--grn);font-weight:700">🔴 EVENT IS LIVE NOW</div>';
+    return;
+  }
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  document.getElementById('cdDays').textContent = String(d).padStart(2,'0');
+  document.getElementById('cdHours').textContent = String(h).padStart(2,'0');
+  document.getElementById('cdMins').textContent = String(m).padStart(2,'0');
+  document.getElementById('cdSecs').textContent = String(s).padStart(2,'0');
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+/* ── DISPLAY EVENT DATE ── */
+const opts = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
+document.getElementById('eventDateDisplay').textContent = CONFIG.EVENT_DATE.toLocaleDateString('en-GB', opts);
+
+/* ── SEATS ── */
+const pct = ((CONFIG.TOTAL_SEATS - CONFIG.SEATS_TAKEN) / CONFIG.TOTAL_SEATS * 100).toFixed(0);
+document.getElementById('seatsLeft').textContent = CONFIG.TOTAL_SEATS - CONFIG.SEATS_TAKEN;
+document.getElementById('seatsFill').style.setProperty('--w', pct + '%');
+
+/* ── FORM SUBMISSION ── */
+document.getElementById('regForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName  = document.getElementById('lastName').value.trim();
+  const email     = document.getElementById('email').value.trim();
+  const company   = document.getElementById('company').value.trim();
+  const jobTitle  = document.getElementById('jobTitle').value.trim();
+  const industry  = document.getElementById('industry').value;
+  const phone     = document.getElementById('phone').value.trim();
+  const telegram  = document.getElementById('telegram').value.trim();
+  const challenge = document.getElementById('challenge').value;
+  const consent   = document.getElementById('consent').checked;
+
+  const errEl = document.getElementById('errorMsg');
+  errEl.style.display = 'none';
+
+  // Validate
+  if(!firstName || !lastName || !email || !company || !jobTitle || !industry){
+    errEl.textContent = '⚠️ Please fill in all required fields.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    errEl.textContent = '⚠️ Please enter a valid email address.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if(!consent){
+    errEl.textContent = '⚠️ Please accept the communications consent to continue.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  document.getElementById('btnText').textContent = '⏳ Registering…';
+
+  const payload = {
+    timestamp: new Date().toISOString(),
+    firstName, lastName, email, company,
+    jobTitle, industry, phone, telegram, challenge,
+    eventDate: CONFIG.EVENT_DATE.toISOString(),
+    source: 'Landing Page'
+  };
+
+  try {
+    // Try local server first, fallback to Google Script
+    let resp;
+    try {
+      resp = await fetch('http://localhost:3000/api/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if(!resp.ok) throw new Error('Server error');
+    } catch(e2) {
+      // Fallback: no-cors mode (Google Script or any endpoint)
+      resp = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+    }
+
+    // no-cors = opaque response — treat as success if no error thrown
+    document.getElementById('regForm').style.display = 'none';
+    document.getElementById('confirmEmail').textContent = email;
+    document.getElementById('successMsg').style.display = 'block';
+
+    // Update seat count
+    CONFIG.SEATS_TAKEN++;
+    const newLeft = CONFIG.TOTAL_SEATS - CONFIG.SEATS_TAKEN;
+    document.getElementById('seatsLeft').textContent = newLeft;
+
+  } catch(err){
+    btn.disabled = false;
+    document.getElementById('btnText').textContent = '🚀 Reserve My Free Seat';
+    errEl.textContent = '❌ Submission failed. Email z@fuels24.com with subject "REGISTER" to secure your seat.';
+    errEl.style.display = 'block';
+  }
+});
+
+/* ── BAR ANIMATIONS ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.dp-fill').forEach(bar => {
+        bar.style.animation = 'none';
+        bar.getBoundingClientRect();
+        bar.style.animation = 'barGrow 2s ease forwards';
+      });
+    }
+  });
+}, {threshold: 0.3});
+const preview = document.querySelector('.demo-preview');
+if(preview) observer.observe(preview);
+</script>
+</body>
+</html>
